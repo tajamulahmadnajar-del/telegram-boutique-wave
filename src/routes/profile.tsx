@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTelegram, useToggleTheme } from "@/lib/telegram";
-import { ChevronRight, Heart, Bell, Package, Wallet, Moon, Sun, LogOut, Store, Shield, MapPin, Tag, Gift, HelpCircle, Settings } from "lucide-react";
+import { ChevronRight, Heart, Bell, Package, Wallet, Moon, Sun, LogOut, Store, Shield, MapPin, Tag, Gift, HelpCircle, Settings, CheckCircle, AlertCircle } from "lucide-react";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "Profile — TG Market" }] }),
@@ -8,7 +8,7 @@ export const Route = createFileRoute("/profile")({
 });
 
 function ProfilePage() {
-  const { user, colorScheme } = useTelegram();
+  const { user, colorScheme, authenticated, loading } = useTelegram();
   const toggleTheme = useToggleTheme();
 
   const menuItems = [
@@ -33,8 +33,23 @@ function ProfilePage() {
       <div className="flex flex-col items-center px-4 pt-6 pb-4">
         <img src={user.photo_url} alt={user.first_name} className="h-20 w-20 rounded-full border-2 border-primary" />
         <h1 className="mt-3 text-lg font-bold">{user.first_name} {user.last_name || ""}</h1>
-        <p className="text-sm text-muted-foreground">@{user.username}</p>
+        {user.username && <p className="text-sm text-muted-foreground">@{user.username}</p>}
         <p className="text-xs text-muted-foreground">ID: {user.id}</p>
+
+        {/* Auth status badge */}
+        <div className="mt-2 flex items-center gap-1.5">
+          {loading ? (
+            <span className="text-xs text-muted-foreground">Connecting...</span>
+          ) : authenticated ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2.5 py-0.5 text-xs font-medium text-green-600 dark:text-green-400">
+              <CheckCircle className="h-3 w-3" /> Telegram Verified
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/10 px-2.5 py-0.5 text-xs font-medium text-yellow-600 dark:text-yellow-400">
+              <AlertCircle className="h-3 w-3" /> Preview Mode
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="mx-4 rounded-xl border bg-card p-4">
