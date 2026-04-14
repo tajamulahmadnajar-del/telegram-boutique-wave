@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTelegram, useToggleTheme } from "@/lib/telegram";
-import { ChevronRight, Heart, Bell, Package, Wallet, Moon, Sun, LogOut } from "lucide-react";
+import { ChevronRight, Heart, Bell, Package, Wallet, Moon, Sun, LogOut, Store, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "Profile — TG Market" }] }),
@@ -15,6 +15,11 @@ function ProfilePage() {
     { icon: Package, label: "Order History", to: "/orders" },
     { icon: Heart, label: "Wishlist", to: "/wishlist" },
     { icon: Bell, label: "Notifications", to: "/notifications" },
+  ];
+
+  const panelItems = [
+    { icon: Store, label: "Seller Panel", to: "/seller/dashboard" },
+    { icon: Shield, label: "Admin Panel", to: "/admin/dashboard" },
   ];
 
   return (
@@ -40,6 +45,16 @@ function ProfilePage() {
 
       <div className="mx-4 mt-4 overflow-hidden rounded-xl border bg-card">
         {menuItems.map((item) => (
+          <Link key={item.to} to={item.to as any} className="flex items-center gap-3 border-b px-4 py-3 last:border-0 transition-colors hover:bg-accent">
+            <item.icon className="h-4.5 w-4.5 text-muted-foreground" />
+            <span className="flex-1 text-sm font-medium">{item.label}</span>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Link>
+        ))}
+      </div>
+
+      <div className="mx-4 mt-4 overflow-hidden rounded-xl border bg-card">
+        {panelItems.map((item) => (
           <Link key={item.to} to={item.to as any} className="flex items-center gap-3 border-b px-4 py-3 last:border-0 transition-colors hover:bg-accent">
             <item.icon className="h-4.5 w-4.5 text-muted-foreground" />
             <span className="flex-1 text-sm font-medium">{item.label}</span>
