@@ -40,13 +40,11 @@ export const Route = createRootRoute({
       { name: "twitter:card", content: "summary" },
       { property: "og:type", content: "website" },
     ],
-    scripts: [
-      { src: "https://telegram.org/js/telegram-web-app.js" },
-    ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "preload", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap", as: "style" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" },
     ],
   }),
