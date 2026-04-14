@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { useCart } from "@/contexts/CartContext";
@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Heart, ShoppingCart, Share2, Store, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import type { Product, Review } from "@/lib/mock-data";
+import { InternalNav } from "@/components/InternalNav";
 
 export const Route = createFileRoute("/product/$productId")({
   head: () => ({ meta: [{ title: "Product — TG Market" }] }),
@@ -49,7 +50,7 @@ function ProductDetailPage() {
       <div className="flex flex-col items-center justify-center py-24 text-center">
         <p className="text-4xl">😕</p>
         <h2 className="mt-3 text-lg font-semibold">Product not found</h2>
-        <Link to="/" className="mt-3 text-sm text-primary">Go back home</Link>
+        <InternalNav to="/" className="mt-3 text-sm text-primary">Go back home</InternalNav>
       </div>
     );
   }
@@ -58,7 +59,6 @@ function ProductDetailPage() {
 
   return (
     <div className="pb-24">
-      {/* Image Gallery */}
       <div className="relative aspect-square overflow-hidden bg-secondary">
         <img src={product.images[currentImage]} alt={product.name} className="h-full w-full object-cover" />
         <button onClick={() => window.history.back()} className="absolute left-3 top-3 rounded-full bg-card/80 p-2 backdrop-blur-sm">
@@ -74,7 +74,7 @@ function ProductDetailPage() {
         </div>
         {product.images.length > 1 && (
           <>
-            <button onClick={() => setCurrentImage((c) => (c - 1 + product.images.length) % product.images.length)} className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-card/60 p-1"><ChevronLeft className="h-4 w-4" /></button>
+            <button onClick={() => setCurrentImage((c) => (c - 1 + product.images.length) % product.images.length)} className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-card/60 p-1"><ChevronRight className="h-4 w-4 rotate-180" /></button>
             <button onClick={() => setCurrentImage((c) => (c + 1) % product.images.length)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-card/60 p-1"><ChevronRight className="h-4 w-4" /></button>
             <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1">
               {product.images.map((_, i) => (
@@ -85,8 +85,7 @@ function ProductDetailPage() {
         )}
       </div>
 
-      <div className="p-4 space-y-4">
-        {/* Price */}
+      <div className="space-y-4 p-4">
         <div>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold">${product.price.toFixed(2)}</span>
@@ -104,19 +103,16 @@ function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Stock */}
         <div className="flex items-center gap-2">
           <div className={`h-2 w-2 rounded-full ${product.stock > 10 ? "bg-success" : product.stock > 0 ? "bg-warning" : "bg-destructive"}`} />
           <span className="text-xs text-muted-foreground">{product.stock > 10 ? "In Stock" : product.stock > 0 ? `Only ${product.stock} left` : "Out of Stock"}</span>
         </div>
 
-        {/* Description */}
         <div>
           <h3 className="text-sm font-semibold">Description</h3>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{product.description}</p>
         </div>
 
-        {/* Seller */}
         <div className="flex items-center gap-3 rounded-xl border bg-card p-3">
           <img src={product.seller.avatar} alt={product.seller.name} className="h-10 w-10 rounded-full" />
           <div className="flex-1">
@@ -131,7 +127,6 @@ function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Reviews */}
         <div>
           <h3 className="text-sm font-semibold">Reviews ({reviews.length})</h3>
           <div className="mt-2 space-y-2">
@@ -140,7 +135,6 @@ function ProductDetailPage() {
         </div>
       </div>
 
-      {/* Bottom CTA */}
       <div className="fixed bottom-16 left-0 right-0 z-30 border-t bg-card px-4 py-3 safe-bottom">
         <div className="mx-auto flex max-w-lg items-center gap-3">
           <QuantitySelector value={quantity} onChange={setQuantity} max={product.stock} />

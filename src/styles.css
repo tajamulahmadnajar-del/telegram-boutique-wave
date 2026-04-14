@@ -175,10 +175,12 @@
   }
 }
 
-/* Disable long-press link preview on mobile */
-a, button {
+a,
+button,
+[role="button"] {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
