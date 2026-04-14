@@ -1,6 +1,7 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { useLocation } from "@tanstack/react-router";
 import { Home, Grid3X3, ShoppingCart, Package, User } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { InternalNav } from "@/components/InternalNav";
 
 const tabs = [
   { to: "/", icon: Home, label: "Home" },
@@ -21,7 +22,7 @@ export function BottomNav() {
           const isActive = tab.to === "/" ? location.pathname === "/" : location.pathname.startsWith(tab.to);
           const Icon = tab.icon;
           return (
-            <Link key={tab.to} to={tab.to} className="relative flex flex-col items-center gap-0.5 px-3 py-1.5">
+            <InternalNav key={tab.to} to={tab.to} className="relative flex flex-col items-center gap-0.5 px-3 py-1.5">
               <div className="relative">
                 <Icon className={`h-5 w-5 transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`} />
                 {tab.to === "/cart" && itemCount > 0 && (
@@ -33,7 +34,7 @@ export function BottomNav() {
               <span className={`text-[10px] font-medium transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`}>
                 {tab.label}
               </span>
-            </Link>
+            </InternalNav>
           );
         })}
       </div>

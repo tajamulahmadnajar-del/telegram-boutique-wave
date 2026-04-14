@@ -1,9 +1,9 @@
-import { Link } from "@tanstack/react-router";
 import type { Category } from "@/lib/mock-data";
+import { InternalNav } from "@/components/InternalNav";
 
 export function CategoryCard({ category }: { category: Category }) {
   return (
-    <Link
+    <InternalNav
       to="/categories"
       search={{ cat: category.id } as any}
       className="group flex flex-col items-center gap-1.5"
@@ -12,16 +12,16 @@ export function CategoryCard({ category }: { category: Category }) {
         {category.icon}
       </div>
       <span className="text-[10px] font-medium text-foreground">{category.name}</span>
-    </Link>
+    </InternalNav>
   );
 }
 
 export function CategoryGridCard({ category }: { category: Category }) {
   return (
-    <Link
+    <InternalNav
       to="/categories"
       search={{ cat: category.id } as any}
-      className="group relative overflow-hidden rounded-xl"
+      className="group relative overflow-hidden rounded-xl text-left"
     >
       <div className="aspect-[4/3] overflow-hidden">
         <img src={category.image} alt={category.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
@@ -32,6 +32,6 @@ export function CategoryGridCard({ category }: { category: Category }) {
           <p className="text-[10px] text-white/70">{category.productCount} products</p>
         </div>
       </div>
-    </Link>
+    </InternalNav>
   );
 }

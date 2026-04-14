@@ -1,6 +1,6 @@
-import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 import type { Order } from "@/lib/mock-data";
+import { InternalNav } from "@/components/InternalNav";
 
 const statusColors: Record<string, string> = {
   pending: "bg-warning/15 text-warning",
@@ -11,7 +11,11 @@ const statusColors: Record<string, string> = {
 
 export function OrderCard({ order }: { order: Order }) {
   return (
-    <Link to="/orders" search={{ id: order.id } as any} className="block rounded-xl border bg-card p-4 transition-shadow hover:shadow-md">
+    <InternalNav
+      to="/orders"
+      search={{ id: order.id } as any}
+      className="block w-full rounded-xl border bg-card p-4 text-left transition-shadow hover:shadow-md"
+    >
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-semibold">{order.id}</p>
@@ -35,7 +39,7 @@ export function OrderCard({ order }: { order: Order }) {
           <ChevronRight className="h-4 w-4 text-muted-foreground" />
         </div>
       </div>
-    </Link>
+    </InternalNav>
   );
 }
 
