@@ -61,16 +61,19 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+  const location = useLocation();
+  const isPanel = location.pathname.startsWith("/seller") || location.pathname.startsWith("/admin");
+
   return (
     <TelegramProvider>
       <CartProvider>
         <WishlistProvider>
           <div className="mx-auto max-w-lg min-h-screen bg-background">
-            <AppHeader />
-            <main className="pb-16">
+            {!isPanel && <AppHeader />}
+            <main className={isPanel ? "" : "pb-16"}>
               <Outlet />
             </main>
-            <BottomNav />
+            {!isPanel && <BottomNav />}
           </div>
           <Toaster position="top-center" />
         </WishlistProvider>
