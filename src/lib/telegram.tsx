@@ -103,6 +103,29 @@ function getTelegramWebApp() {
   return null;
 }
 
+// Load Telegram WebApp SDK dynamically (non-render-blocking)
+function loadTelegramScript(): Promise<void> {
+  if (typeof window === "undefined") return Promise.resolve();
+  if (window.Telegram?.WebApp) return Promise.resolve();
+  if (document.querySelector('script[src*="telegram-web-app.js"]')) {
+    return new Promise((resolve) => {
+      const check = () => {
+        if (window.Telegram?.WebApp) resolve();
+        else setTimeout(check, 50);
+      };
+      check();
+    });
+  }
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://telegram.org/js/telegram-web-app.js";
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => resolve(); // Don't block on failure
+    document.head.appendChild(script);
+  });
+}
+
 export function TelegramProvider({ children }: { children: ReactNode }) {
   const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
   const [ready, setReady] = useState(false);
