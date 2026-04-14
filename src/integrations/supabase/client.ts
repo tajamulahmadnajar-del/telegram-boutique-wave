@@ -5,13 +5,16 @@ import type { Database } from './types';
 const SUPABASE_URL = "https://isfmuzyoodlvkoubxmgz.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzZm11enlvb2RsdmtvdWJ4bWd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNjg3MjgsImV4cCI6MjA5MTc0NDcyOH0.D8iJqcdQ1V2dFNAhiGJ5xq4YsJJIpSn9BiN_M0rS2UY";
 
+// SSR-safe storage that avoids localStorage reference on server
+const isBrowser = typeof globalThis !== 'undefined' && typeof globalThis.localStorage !== 'undefined';
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
-    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-    persistSession: typeof window !== 'undefined',
-    autoRefreshToken: typeof window !== 'undefined',
+    storage: isBrowser ? globalThis.localStorage : undefined,
+    persistSession: isBrowser,
+    autoRefreshToken: isBrowser,
   }
 });
