@@ -73,7 +73,6 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
       setColorScheme("dark");
     }
   }, []);
-  const [ready, setReady] = useState(false);
 
   const themeParams = colorScheme === "dark" ? darkTheme : lightTheme;
 
