@@ -33,6 +33,12 @@ export const Route = createRootRoute({
       { title: "TG Market" },
       { name: "description", content: "Your one-stop marketplace on Telegram" },
       { name: "theme-color", content: "#2481cc" },
+      { property: "og:title", content: "TG Market" },
+      { name: "twitter:title", content: "TG Market" },
+      { property: "og:description", content: "Your one-stop marketplace on Telegram" },
+      { name: "twitter:description", content: "Your one-stop marketplace on Telegram" },
+      { name: "twitter:card", content: "summary" },
+      { property: "og:type", content: "website" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
