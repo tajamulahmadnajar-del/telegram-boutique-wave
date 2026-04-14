@@ -133,7 +133,7 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
     } else {
       document.documentElement.classList.remove("dark");
     }
-    localStorage.setItem("tg-theme", colorScheme);
+    if (typeof window !== 'undefined') localStorage.setItem("tg-theme", colorScheme);
   }, [colorScheme]);
 
   // Telegram auto-login
