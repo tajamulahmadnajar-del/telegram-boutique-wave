@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTelegram, useToggleTheme } from "@/lib/telegram";
-import { ChevronRight, Heart, Bell, Package, Wallet, Moon, Sun, LogOut, Store, Shield } from "lucide-react";
+import { ChevronRight, Heart, Bell, Package, Wallet, Moon, Sun, LogOut, Store, Shield, MapPin, Tag, Gift, HelpCircle, Settings } from "lucide-react";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "Profile — TG Market" }] }),
@@ -14,7 +14,13 @@ function ProfilePage() {
   const menuItems = [
     { icon: Package, label: "Order History", to: "/orders" },
     { icon: Heart, label: "Wishlist", to: "/wishlist" },
+    { icon: Wallet, label: "Wallet", to: "/wallet" },
+    { icon: MapPin, label: "My Addresses", to: "/addresses" },
+    { icon: Tag, label: "Coupons & Offers", to: "/coupons" },
+    { icon: Gift, label: "Refer & Earn", to: "/refer" },
     { icon: Bell, label: "Notifications", to: "/notifications" },
+    { icon: HelpCircle, label: "Help & Support", to: "/help" },
+    { icon: Settings, label: "Settings", to: "/settings" },
   ];
 
   const panelItems = [
@@ -32,15 +38,16 @@ function ProfilePage() {
       </div>
 
       <div className="mx-4 rounded-xl border bg-card p-4">
-        <div className="flex items-center gap-3">
+        <Link to="/wallet" className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
             <Wallet className="h-5 w-5 text-primary" />
           </div>
-          <div>
+          <div className="flex-1">
             <p className="text-xs text-muted-foreground">Wallet Balance</p>
             <p className="text-lg font-bold">$124.50</p>
           </div>
-        </div>
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        </Link>
       </div>
 
       <div className="mx-4 mt-4 overflow-hidden rounded-xl border bg-card">
