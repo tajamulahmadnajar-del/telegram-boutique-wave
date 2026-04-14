@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useTelegram, useToggleTheme } from "@/lib/telegram";
 import { ChevronRight, Heart, Bell, Package, Wallet, Moon, Sun, LogOut, Store, Shield, MapPin, Tag, Gift, HelpCircle, Settings, CheckCircle, AlertCircle } from "lucide-react";
+import { InternalNav } from "@/components/InternalNav";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "Profile — TG Market" }] }),
@@ -36,16 +37,15 @@ function ProfilePage() {
         {user.username && <p className="text-sm text-muted-foreground">@{user.username}</p>}
         <p className="text-xs text-muted-foreground">ID: {user.id}</p>
 
-        {/* Auth status badge */}
         <div className="mt-2 flex items-center gap-1.5">
           {loading ? (
             <span className="text-xs text-muted-foreground">Connecting...</span>
           ) : authenticated ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2.5 py-0.5 text-xs font-medium text-green-600 dark:text-green-400">
+            <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success">
               <CheckCircle className="h-3 w-3" /> Telegram Verified
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/10 px-2.5 py-0.5 text-xs font-medium text-yellow-600 dark:text-yellow-400">
+            <span className="inline-flex items-center gap-1 rounded-full bg-warning/10 px-2.5 py-0.5 text-xs font-medium text-warning">
               <AlertCircle className="h-3 w-3" /> Preview Mode
             </span>
           )}
@@ -53,7 +53,7 @@ function ProfilePage() {
       </div>
 
       <div className="mx-4 rounded-xl border bg-card p-4">
-        <Link to="/wallet" className="flex items-center gap-3">
+        <InternalNav to="/wallet" className="flex w-full items-center gap-3 text-left">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
             <Wallet className="h-5 w-5 text-primary" />
           </div>
@@ -62,26 +62,26 @@ function ProfilePage() {
             <p className="text-lg font-bold">$124.50</p>
           </div>
           <ChevronRight className="h-4 w-4 text-muted-foreground" />
-        </Link>
+        </InternalNav>
       </div>
 
       <div className="mx-4 mt-4 overflow-hidden rounded-xl border bg-card">
         {menuItems.map((item) => (
-          <Link key={item.to} to={item.to as any} className="flex items-center gap-3 border-b px-4 py-3 last:border-0 transition-colors hover:bg-accent">
+          <InternalNav key={item.to} to={item.to as any} className="flex w-full items-center gap-3 border-b px-4 py-3 text-left last:border-0 transition-colors hover:bg-accent">
             <item.icon className="h-4.5 w-4.5 text-muted-foreground" />
             <span className="flex-1 text-sm font-medium">{item.label}</span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </Link>
+          </InternalNav>
         ))}
       </div>
 
       <div className="mx-4 mt-4 overflow-hidden rounded-xl border bg-card">
         {panelItems.map((item) => (
-          <Link key={item.to} to={item.to as any} className="flex items-center gap-3 border-b px-4 py-3 last:border-0 transition-colors hover:bg-accent">
+          <InternalNav key={item.to} to={item.to as any} className="flex w-full items-center gap-3 border-b px-4 py-3 text-left last:border-0 transition-colors hover:bg-accent">
             <item.icon className="h-4.5 w-4.5 text-muted-foreground" />
             <span className="flex-1 text-sm font-medium">{item.label}</span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </Link>
+          </InternalNav>
         ))}
       </div>
 

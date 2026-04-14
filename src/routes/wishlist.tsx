@@ -1,7 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { ProductCard } from "@/components/ProductCard";
 import { Heart } from "lucide-react";
+import { InternalNav } from "@/components/InternalNav";
 
 export const Route = createFileRoute("/wishlist")({
   head: () => ({ meta: [{ title: "Wishlist — TG Market" }] }),
@@ -17,7 +18,7 @@ function WishlistPage() {
         <Heart className="h-16 w-16 text-muted-foreground/30" />
         <h2 className="mt-4 text-lg font-semibold">Your wishlist is empty</h2>
         <p className="mt-1 text-sm text-muted-foreground">Save products you love here</p>
-        <Link to="/" className="mt-4 rounded-full bg-primary px-6 py-2 text-sm font-medium text-primary-foreground">Browse Products</Link>
+        <InternalNav to="/" className="mt-4 rounded-full bg-primary px-6 py-2 text-sm font-medium text-primary-foreground">Browse Products</InternalNav>
       </div>
     );
   }

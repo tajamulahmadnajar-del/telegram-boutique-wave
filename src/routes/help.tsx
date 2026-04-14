@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { AppHeader } from "@/components/AppHeader";
 import { MessageCircle, Mail, Phone, ChevronRight, HelpCircle, ShieldCheck, Truck, RotateCcw, CreditCard } from "lucide-react";
 

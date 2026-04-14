@@ -1,8 +1,8 @@
-import { Link } from "@tanstack/react-router";
 import { Heart, Plus, Star } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import type { Product } from "@/lib/mock-data";
+import { InternalNav } from "@/components/InternalNav";
 
 interface ProductCardProps {
   product: Product;
@@ -16,7 +16,7 @@ export function ProductCard({ product, compact }: ProductCardProps) {
 
   return (
     <div className="group relative overflow-hidden rounded-xl border bg-card transition-shadow hover:shadow-md">
-      <Link to="/product/$productId" params={{ productId: product.id }} className="block">
+      <InternalNav to="/product/$productId" params={{ productId: product.id }} className="block w-full">
         <div className="relative aspect-square overflow-hidden bg-secondary">
           <img src={product.image} alt={product.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
           {discount > 0 && (
@@ -25,7 +25,7 @@ export function ProductCard({ product, compact }: ProductCardProps) {
             </span>
           )}
         </div>
-      </Link>
+      </InternalNav>
 
       <button
         onClick={(e) => { e.preventDefault(); toggleWishlist(product); }}
@@ -35,9 +35,9 @@ export function ProductCard({ product, compact }: ProductCardProps) {
       </button>
 
       <div className={`p-2.5 ${compact ? "p-2" : ""}`}>
-        <Link to="/product/$productId" params={{ productId: product.id }}>
+        <InternalNav to="/product/$productId" params={{ productId: product.id }} className="text-left">
           <h3 className="line-clamp-2 text-xs font-medium leading-tight">{product.name}</h3>
-        </Link>
+        </InternalNav>
         <div className="mt-1 flex items-center gap-1">
           <Star className="h-3 w-3 fill-warning text-warning" />
           <span className="text-[10px] text-muted-foreground">{product.rating} ({product.reviewCount})</span>

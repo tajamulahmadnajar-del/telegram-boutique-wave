@@ -1,20 +1,20 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart, type CartItem as CartItemType } from "@/contexts/CartContext";
-import { Link } from "@tanstack/react-router";
+import { InternalNav } from "@/components/InternalNav";
 
 export function CartItemCard({ item }: { item: CartItemType }) {
   const { removeFromCart, updateQuantity } = useCart();
 
   return (
     <div className="flex gap-3 rounded-xl border bg-card p-3">
-      <Link to="/product/$productId" params={{ productId: item.product.id }} className="flex-shrink-0">
+      <InternalNav to="/product/$productId" params={{ productId: item.product.id }} className="flex-shrink-0">
         <img src={item.product.image} alt={item.product.name} className="h-20 w-20 rounded-lg object-cover" />
-      </Link>
+      </InternalNav>
       <div className="flex flex-1 flex-col justify-between">
         <div>
-          <Link to="/product/$productId" params={{ productId: item.product.id }}>
+          <InternalNav to="/product/$productId" params={{ productId: item.product.id }} className="text-left">
             <h3 className="line-clamp-1 text-sm font-medium">{item.product.name}</h3>
-          </Link>
+          </InternalNav>
           <p className="text-xs text-muted-foreground">{item.product.seller.name}</p>
         </div>
         <div className="flex items-center justify-between">

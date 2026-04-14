@@ -7,7 +7,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { FlashDealCard } from "@/components/FlashDealCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronRight } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { InternalNav } from "@/components/InternalNav";
 import type { Product, Category } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
@@ -25,9 +25,9 @@ function SectionHeader({ title, linkTo }: { title: string; linkTo?: string }) {
     <div className="flex items-center justify-between px-4 pt-5 pb-2">
       <h2 className="text-base font-bold">{title}</h2>
       {linkTo && (
-        <Link to={linkTo as any} className="flex items-center gap-0.5 text-xs font-medium text-primary">
+        <InternalNav to={linkTo as any} className="flex items-center gap-0.5 text-xs font-medium text-primary">
           See all <ChevronRight className="h-3.5 w-3.5" />
-        </Link>
+        </InternalNav>
       )}
     </div>
   );

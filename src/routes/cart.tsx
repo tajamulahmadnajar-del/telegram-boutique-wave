@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCart } from "@/contexts/CartContext";
 import { CartItemCard } from "@/components/CartItemCard";
 import { ShoppingCart, Tag } from "lucide-react";
 import { useState } from "react";
+import { InternalNav } from "@/components/InternalNav";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({ meta: [{ title: "Cart — TG Market" }] }),
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/cart")({
 function CartPage() {
   const { items, subtotal, total, discount, coupon, applyCoupon, itemCount } = useCart();
   const [couponInput, setCouponInput] = useState("");
+  const navigate = useNavigate();
 
   if (items.length === 0) {
     return (
@@ -19,9 +21,9 @@ function CartPage() {
         <ShoppingCart className="h-16 w-16 text-muted-foreground/30" />
         <h2 className="mt-4 text-lg font-semibold">Your cart is empty</h2>
         <p className="mt-1 text-sm text-muted-foreground">Add some products to get started</p>
-        <Link to="/" className="mt-4 rounded-full bg-primary px-6 py-2 text-sm font-medium text-primary-foreground">
+        <InternalNav to="/" className="mt-4 rounded-full bg-primary px-6 py-2 text-sm font-medium text-primary-foreground">
           Shop Now
-        </Link>
+        </InternalNav>
       </div>
     );
   }
@@ -72,9 +74,9 @@ function CartPage() {
             <span className="text-sm font-bold">Total</span>
             <span className="text-lg font-bold">${total.toFixed(2)}</span>
           </div>
-          <Link to="/checkout" className="mt-2 flex w-full items-center justify-center rounded-full bg-primary py-2.5 text-sm font-semibold text-primary-foreground transition-transform active:scale-[0.98]">
+          <button onClick={() => navigate({ to: "/checkout" })} className="mt-2 flex w-full items-center justify-center rounded-full bg-primary py-2.5 text-sm font-semibold text-primary-foreground transition-transform active:scale-[0.98]">
             Proceed to Checkout
-          </Link>
+          </button>
         </div>
       </div>
     </div>
