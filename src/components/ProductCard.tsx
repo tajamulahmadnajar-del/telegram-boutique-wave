@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { Heart, Plus, Star } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
