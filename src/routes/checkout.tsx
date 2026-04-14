@@ -28,7 +28,7 @@ function CheckoutPage() {
     }
     toast.success("Order placed successfully! 🎉");
     clearCart();
-    navigate({ to: "/orders" });
+    navigate({ to: "/orders", search: { id: "" } });
   };
 
   if (items.length === 0) {
