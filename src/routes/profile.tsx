@@ -54,6 +54,16 @@ function ProfilePage() {
       </div>
 
       <div className="mx-4 mt-4 overflow-hidden rounded-xl border bg-card">
+        {panelItems.map((item) => (
+          <Link key={item.to} to={item.to as any} className="flex items-center gap-3 border-b px-4 py-3 last:border-0 transition-colors hover:bg-accent">
+            <item.icon className="h-4.5 w-4.5 text-muted-foreground" />
+            <span className="flex-1 text-sm font-medium">{item.label}</span>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Link>
+        ))}
+      </div>
+
+      <div className="mx-4 mt-4 overflow-hidden rounded-xl border bg-card">
         <button onClick={toggleTheme} className="flex w-full items-center gap-3 px-4 py-3 transition-colors hover:bg-accent">
           {colorScheme === "dark" ? <Sun className="h-4.5 w-4.5 text-muted-foreground" /> : <Moon className="h-4.5 w-4.5 text-muted-foreground" />}
           <span className="flex-1 text-left text-sm font-medium">{colorScheme === "dark" ? "Light Mode" : "Dark Mode"}</span>
