@@ -62,15 +62,17 @@ const darkTheme: TelegramThemeParams = {
 const TelegramContext = createContext<TelegramContextType | null>(null);
 
 export function TelegramProvider({ children }: { children: ReactNode }) {
-  const [colorScheme, setColorScheme] = useState<"light" | "dark">(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("tg-theme");
-      if (saved === "dark" || saved === "light") return saved;
-      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    }
-    return "light";
-  });
+  const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
   const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("tg-theme");
+    if (saved === "dark" || saved === "light") {
+      setColorScheme(saved);
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setColorScheme("dark");
+    }
+  }, []);
 
   const themeParams = colorScheme === "dark" ? darkTheme : lightTheme;
 
