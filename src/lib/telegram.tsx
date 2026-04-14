@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface TelegramUser {
   id: number;
@@ -24,6 +25,8 @@ interface TelegramContextType {
   themeParams: TelegramThemeParams;
   colorScheme: "light" | "dark";
   ready: boolean;
+  authenticated: boolean;
+  loading: boolean;
   showBackButton: (show: boolean) => void;
   onBackButtonClick: (cb: () => void) => void;
   hapticFeedback: (type: "light" | "medium" | "heavy") => void;
@@ -59,18 +62,66 @@ const darkTheme: TelegramThemeParams = {
   secondary_bg_color: "#0f0f0f",
 };
 
+declare global {
+  interface Window {
+    Telegram?: {
+      WebApp?: {
+        initData: string;
+        initDataUnsafe: {
+          user?: {
+            id: number;
+            first_name: string;
+            last_name?: string;
+            username?: string;
+            photo_url?: string;
+            language_code?: string;
+          };
+        };
+        themeParams: Record<string, string>;
+        colorScheme: "light" | "dark";
+        ready: () => void;
+        close: () => void;
+        BackButton: {
+          show: () => void;
+          hide: () => void;
+          onClick: (cb: () => void) => void;
+        };
+        HapticFeedback: {
+          impactOccurred: (style: string) => void;
+        };
+      };
+    };
+  }
+}
+
 const TelegramContext = createContext<TelegramContextType | null>(null);
+
+function getTelegramWebApp() {
+  if (typeof window !== "undefined" && window.Telegram?.WebApp?.initData) {
+    return window.Telegram.WebApp;
+  }
+  return null;
+}
 
 export function TelegramProvider({ children }: { children: ReactNode }) {
   const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
   const [ready, setReady] = useState(false);
+  const [user, setUser] = useState<TelegramUser>(defaultUser);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  // Theme detection
   useEffect(() => {
-    const saved = localStorage.getItem("tg-theme");
-    if (saved === "dark" || saved === "light") {
-      setColorScheme(saved);
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setColorScheme("dark");
+    const tg = getTelegramWebApp();
+    if (tg) {
+      setColorScheme(tg.colorScheme || "light");
+    } else {
+      const saved = localStorage.getItem("tg-theme");
+      if (saved === "dark" || saved === "light") {
+        setColorScheme(saved);
+      } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        setColorScheme("dark");
+      }
     }
   }, []);
 
@@ -85,25 +136,108 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("tg-theme", colorScheme);
   }, [colorScheme]);
 
+  // Telegram auto-login
   useEffect(() => {
-    setReady(true);
+    const tg = getTelegramWebApp();
+
+    if (tg && tg.initData) {
+      // Running inside Telegram — extract user and authenticate
+      const tgUser = tg.initDataUnsafe?.user;
+      if (tgUser) {
+        setUser({
+          id: tgUser.id,
+          first_name: tgUser.first_name,
+          last_name: tgUser.last_name,
+          username: tgUser.username,
+          photo_url: tgUser.photo_url || `https://api.dicebear.com/9.x/avataaars/svg?seed=${tgUser.id}`,
+          language_code: tgUser.language_code,
+        });
+      }
+
+      // Call edge function to validate and get session
+      const authenticate = async () => {
+        try {
+          const response = await fetch(
+            `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/telegram-auth`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+              },
+              body: JSON.stringify({ initData: tg.initData }),
+            }
+          );
+
+          const data = await response.json();
+
+          if (response.ok && data.session) {
+            // Set supabase session
+            await supabase.auth.setSession({
+              access_token: data.session.access_token,
+              refresh_token: data.session.refresh_token,
+            });
+            setAuthenticated(true);
+
+            // Update user with server-confirmed data
+            if (data.user) {
+              setUser((prev) => ({
+                ...prev,
+                ...data.user,
+                photo_url: data.user.photo_url || prev.photo_url,
+              }));
+            }
+          } else {
+            console.warn("[TG Auth] Failed:", data.error);
+          }
+        } catch (err) {
+          console.error("[TG Auth] Error:", err);
+        } finally {
+          setLoading(false);
+          setReady(true);
+        }
+      };
+
+      authenticate();
+      tg.ready();
+    } else {
+      // Browser preview mode — use mock data
+      setLoading(false);
+      setReady(true);
+    }
   }, []);
 
+  const tg = typeof window !== "undefined" ? window.Telegram?.WebApp : undefined;
+
   const value: TelegramContextType = {
-    user: defaultUser,
+    user,
     themeParams,
     colorScheme,
     ready,
-    showBackButton: () => {},
-    onBackButtonClick: () => {},
+    authenticated,
+    loading,
+    showBackButton: (show) => {
+      if (tg?.BackButton) {
+        show ? tg.BackButton.show() : tg.BackButton.hide();
+      }
+    },
+    onBackButtonClick: (cb) => {
+      tg?.BackButton?.onClick(cb);
+    },
     hapticFeedback: (type) => {
-      if (navigator.vibrate) {
+      if (tg?.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred(type);
+      } else if (navigator.vibrate) {
         const ms = type === "light" ? 10 : type === "medium" ? 20 : 30;
         navigator.vibrate(ms);
       }
     },
     close: () => {
-      console.log("[TG Mock] WebApp.close()");
+      if (tg) {
+        tg.close();
+      } else {
+        console.log("[TG Mock] WebApp.close()");
+      }
     },
   };
 
