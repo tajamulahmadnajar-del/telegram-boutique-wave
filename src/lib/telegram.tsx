@@ -161,24 +161,27 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
 
   // Telegram auto-login
   useEffect(() => {
-    const tg = getTelegramWebApp();
+    const init = async () => {
+      await loadTelegramScript();
+      const tg = getTelegramWebApp();
 
-    if (tg && tg.initData) {
-      // Running inside Telegram — extract user and authenticate
-      const tgUser = tg.initDataUnsafe?.user;
-      if (tgUser) {
-        setUser({
-          id: tgUser.id,
-          first_name: tgUser.first_name,
-          last_name: tgUser.last_name,
-          username: tgUser.username,
-          photo_url: tgUser.photo_url || `https://api.dicebear.com/9.x/avataaars/svg?seed=${tgUser.id}`,
-          language_code: tgUser.language_code,
-        });
-      }
+      if (tg && tg.initData) {
+        // Running inside Telegram — extract user and authenticate
+        const tgUser = tg.initDataUnsafe?.user;
+        if (tgUser) {
+          setUser({
+            id: tgUser.id,
+            first_name: tgUser.first_name,
+            last_name: tgUser.last_name,
+            username: tgUser.username,
+            photo_url: tgUser.photo_url || `https://api.dicebear.com/9.x/avataaars/svg?seed=${tgUser.id}`,
+            language_code: tgUser.language_code,
+          });
+          // Apply Telegram theme
+          setColorScheme(tg.colorScheme || "light");
+        }
 
-      // Call edge function to validate and get session
-      const authenticate = async () => {
+        // Call edge function to validate and get session
         try {
           const response = await fetch(
             `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/telegram-auth`,
@@ -195,14 +198,12 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
           const data = await response.json();
 
           if (response.ok && data.session) {
-            // Set supabase session
             await supabase.auth.setSession({
               access_token: data.session.access_token,
               refresh_token: data.session.refresh_token,
             });
             setAuthenticated(true);
 
-            // Update user with server-confirmed data
             if (data.user) {
               setUser((prev) => ({
                 ...prev,
@@ -219,15 +220,16 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
           setLoading(false);
           setReady(true);
         }
-      };
 
-      authenticate();
-      tg.ready();
-    } else {
-      // Browser preview mode — use mock data
-      setLoading(false);
-      setReady(true);
-    }
+        tg.ready();
+      } else {
+        // Browser preview mode — use mock data
+        setLoading(false);
+        setReady(true);
+      }
+    };
+
+    init();
   }, []);
 
   const tg = typeof window !== "undefined" ? window.Telegram?.WebApp : undefined;
