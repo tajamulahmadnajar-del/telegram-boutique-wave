@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTelegram, useToggleTheme } from "@/lib/telegram";
-import { ChevronRight, Heart, Bell, Package, Wallet, Moon, Sun, LogOut } from "lucide-react";
+import { ChevronRight, Heart, Bell, Package, Wallet, Moon, Sun, LogOut, Store, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "Profile — TG Market" }] }),
@@ -15,6 +15,11 @@ function ProfilePage() {
     { icon: Package, label: "Order History", to: "/orders" },
     { icon: Heart, label: "Wishlist", to: "/wishlist" },
     { icon: Bell, label: "Notifications", to: "/notifications" },
+  ];
+
+  const panelItems = [
+    { icon: Store, label: "Seller Panel", to: "/seller/dashboard" },
+    { icon: Shield, label: "Admin Panel", to: "/admin/dashboard" },
   ];
 
   return (
